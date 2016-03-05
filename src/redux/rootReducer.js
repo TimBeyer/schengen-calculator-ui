@@ -1,8 +1,6 @@
-import { combineReducers } from 'redux'
-import { routerReducer as router } from 'react-router-redux'
-import counter from './modules/counter'
+import { combineReducers } from 'redux-immutable';
+import dates from './modules/dates';
 
 export default combineReducers({
-  counter,
-  router
-})
+  dates
+});
