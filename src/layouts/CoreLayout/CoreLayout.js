@@ -13,7 +13,7 @@ import '../../styles/core.scss';
 function CoreLayout ({ children }) {
   return (
     <div className='page-container'>
-      <div className='view-container'>
+      <div className='view-container container-fluid'>
         {children}
       </div>
     </div>

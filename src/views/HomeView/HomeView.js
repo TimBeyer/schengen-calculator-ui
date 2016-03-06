@@ -46,14 +46,30 @@ class HomeView extends React.Component {
   render () {
     console.log(this.props.ranges)
     return (
-      <div className='container text-center'>
-        <h1>Calculate your schengen area stay</h1>
-        {_.map(this.props.ranges, this.range.bind(this))}
-        <h2>
-        </h2>
-        <button className='btn btn-default' onClick={this.props.addRange}>
-          Add Stay
-        </button>
+      <div>
+        <div className='row'>
+          <h1>Calculate your schengen area stay</h1>
+        </div>
+        <div className="row">
+          <div className="col-md-3">
+            <div className="panel panel-default">
+              <div className="panel-heading">
+                <div className="row">
+                  <div className="col-md-12">
+                    Enter your dates
+                    <button className='btn btn-success btn-xs pull-right' onClick={this.props.addRange}>
+                      <span className="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Stay
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="panel-body">
+                {_.map(this.props.ranges, this.range.bind(this))}
+
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
