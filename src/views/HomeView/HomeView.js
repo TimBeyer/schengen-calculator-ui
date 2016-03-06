@@ -15,22 +15,32 @@ class HomeView extends React.Component {
     addRange: PropTypes.func.isRequired
   };
 
+  range (range, id) {
+    const setValue = this.props.setValue.bind(null, id);
+    const deleteRange = this.props.deleteRange.bind(null, id);
+    const rangesWithoutThis = _.omitBy(this.props.ranges, (range, rangeId) => rangeId === id || range === null);
+    const otherRanges = _.values(rangesWithoutThis);
+
+    return (<Range
+      key={id}
+      rangeId={id}
+      value={range}
+      otherRanges={otherRanges}
+      setValue={setValue}
+      deleteRange={deleteRange}
+    />);
+  }
+
   render () {
     console.log(this.props.ranges)
     return (
       <div className='container text-center'>
         <h1>Calculate your schengen area stay</h1>
-        {_.map(this.props.ranges, (range, id) => <Range
-          key={id}
-          rangeId={id}
-          value={range}
-          setValue={this.props.setValue.bind(null, id)}
-          deleteRange={this.props.deleteRange.bind(null, id)}
-        />)}
+        {_.map(this.props.ranges, this.range.bind(this))}
         <h2>
         </h2>
         <button className='btn btn-default' onClick={this.props.addRange}>
-          Add Range
+          Add Stay
         </button>
       </div>
     );
@@ -39,7 +49,6 @@ class HomeView extends React.Component {
 
 const mapStateToProps = (state) => {
   const ranges = state.get('ranges').toJS();
-  console.log(ranges);
   const days = schengen(180, moment(), _.filter(_.values(ranges), _.isObject));
   console.log(days);
   return {
