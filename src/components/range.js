@@ -11,7 +11,7 @@ const stateDefinitions = {
   },
   unavailable: {
     selectable: false,
-    color: '#78818b',
+    color: '#cccccc',
     label: 'Previous stays',
   },
 };
@@ -52,7 +52,6 @@ const DatePicker = React.createClass({
     const start = this.props.value ? this.props.value.start.format('DD.MM.YYYY') : '';
     const end = this.props.value ? this.props.value.end.format('DD.MM.YYYY') : '';
 
-    console.log(this.props.uiState)
     return (
       <div>
         <div className="row">
@@ -70,7 +69,7 @@ const DatePicker = React.createClass({
           <div className="col-xs-4">
           <form className="form-inline pull-right">
             <div className="form-group">
-              <div className="btn-group" role="group">
+              <div className="btn-group btn-group-justified" role="group">
                 <a className="btn btn-default" onClick={this.onToggleCalendar}>
                 {
                   this.props.uiState.showCalendar ? (

@@ -9,10 +9,9 @@ const stateDefinitions = {
   __default: {
     label: 'This stay'
   },
-  unavailable: {
-    selectable: false,
-    color: '#78818b',
-    label: 'Previous stays',
+  euDays: {
+    color: '#cccccc',
+    label: 'Time spent in EU',
   },
 };
 
@@ -22,8 +21,10 @@ const Overview = React.createClass({
       value: null
     };
   },
-  onSelect(range, states) {
-
+  onSelect(value, states) {
+    console.log('Selected', value);
+    console.log(this.props)
+    this.props.setReferencePoint(value);
   },
 
   render() {
@@ -32,7 +33,7 @@ const Overview = React.createClass({
     });
     let dateRanges = _.map(sortedRanges, (range) => {
       return {
-        state: 'unavailable',
+        state: 'euDays',
         range: range
       };
     });
@@ -44,7 +45,7 @@ const Overview = React.createClass({
             <DateRangePicker
               singleDateRange={true}
               firstOfWeek={1}
-              numberOfCalendars={3}
+              numberOfCalendars={6}
               selectionType='single'
               selectedLabel='This stay'
               showLegend={true}
@@ -52,7 +53,7 @@ const Overview = React.createClass({
               stateDefinitions={stateDefinitions}
               dateStates={dateRanges}
               value={this.props.value || null}
-              onSelect={this.onSelect} />
+              onSelect={this.onSelect}/>
           </div>
         </div>
       </div>

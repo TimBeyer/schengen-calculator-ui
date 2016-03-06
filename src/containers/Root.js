@@ -9,7 +9,6 @@ export default class Root extends React.Component {
     store: PropTypes.object.isRequired
   };
 
-
   get devTools () {
     if (__DEBUG__) {
       if (__DEBUG_NEW_WINDOW__) {
@@ -19,8 +18,9 @@ export default class Root extends React.Component {
           window.devToolsExtension.open();
         }
       } else if (!window.devToolsExtension) {
-        const DevTools = require('containers/DevTools').default;
-        return <DevTools />;
+        return;
+        // const DevTools = require('containers/DevTools').default;
+        // return <DevTools />;
       }
     }
   }

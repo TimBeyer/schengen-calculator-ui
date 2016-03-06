@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+const moment = require('moment');
 
 // ------------------------------------
 // Constants
@@ -9,11 +10,20 @@ export const RANGE_ADD = 'RANGE_ADD';
 export const CALENDAR_SHOW = 'CALENDAR_SHOW';
 export const CALENDAR_HIDE = 'CALENDAR_HIDE';
 
-
+export const REFERENCE_POINT_SET = 'REFERENCE_POINT_SET';
 
 // ------------------------------------
 // Actions
 // ------------------------------------
+
+export function setReferencePoint (value) {
+  return {
+    type: REFERENCE_POINT_SET,
+    payload: {
+      value
+    }
+  };
+}
 
 export function showCalendar (id) {
   return {
@@ -35,7 +45,8 @@ export function hideCalendar (id) {
 
 export const actions = {
   showCalendar,
-  hideCalendar
+  hideCalendar,
+  setReferencePoint
 };
 
 // ------------------------------------
@@ -43,7 +54,6 @@ export const actions = {
 // ------------------------------------
 const ACTION_HANDLERS = {
   [RANGE_ADD]: (state, action) => {
-    console.log('Add Range')
     return state.setIn(['ranges', action.payload.id], Immutable.Map({
       showCalendar: true
     }));
@@ -54,13 +64,16 @@ const ACTION_HANDLERS = {
   [CALENDAR_HIDE]: (state, action) => {
     return state.setIn(['ranges', action.payload.id, 'showCalendar'], false);
   },
-  [RANGE_DELETE]: (state, action) => state.deleteIn(['ranges', action.payload.id])
+  [RANGE_DELETE]: (state, action) => state.deleteIn(['ranges', action.payload.id]),
+  [REFERENCE_POINT_SET]: (state, action) => state.setIn(['referencePoint'], action.payload.value)
 };
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const initialState = Immutable.Map({});
+const initialState = Immutable.Map({
+  referencePoint: moment()
+});
 export default function dateReducer (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
 

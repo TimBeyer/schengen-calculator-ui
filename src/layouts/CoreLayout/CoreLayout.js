@@ -13,7 +13,7 @@ import '../../styles/core.scss';
 function CoreLayout ({ children }) {
   return (
     <div className='page-container'>
-      <div className='view-container container'>
+      <div className='view-container container-fluid' style={{maxWidth: '1520px'}}>
         {children}
       </div>
     </div>
