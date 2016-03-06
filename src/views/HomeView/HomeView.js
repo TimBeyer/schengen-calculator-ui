@@ -44,18 +44,17 @@ class HomeView extends React.Component {
   }
 
   render () {
-    console.log(this.props.ranges)
     return (
       <div>
         <div className='row'>
           <h1>Calculate your schengen area stay</h1>
         </div>
         <div className="row">
-          <div className="col-md-3">
+          <div className="col-sm-12 col-md-5">
             <div className="panel panel-default">
               <div className="panel-heading">
                 <div className="row">
-                  <div className="col-md-12">
+                  <div className="col-xs-12 panel-title">
                     Enter your dates
                     <button className='btn btn-success btn-xs pull-right' onClick={this.props.addRange}>
                       <span className="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Stay

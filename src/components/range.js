@@ -56,18 +56,18 @@ const DatePicker = React.createClass({
     return (
       <div>
         <div className="row">
-          <div className="col-md-8">
+          <div className="col-xs-8">
             <form className="form-inline">
               <div className="form-group">
                 <div className="input-group">
-                  <input type="text" style={{width: '110px'}} className="form-control" value={start} placeholder="Start" readOnly />
+                  <input type="text" className="form-control" value={start} placeholder="Start" readOnly />
                   <div className="input-group-addon">-</div>
-                  <input type="text" style={{width: '110px'}} className="form-control" value={end} placeholder="End" readOnly />
+                  <input type="text" className="form-control" value={end} placeholder="End" readOnly />
                 </div>
               </div>
             </form>
           </div>
-          <div className="col-md-4">
+          <div className="col-xs-4">
           <form className="form-inline pull-right">
             <div className="form-group">
               <div className="btn-group" role="group">
