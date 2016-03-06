@@ -19,21 +19,23 @@ const stateDefinitions = {
 const DatePicker = React.createClass({
   getInitialState() {
     return {
-      value: null,
-      showCalendar: true
+      value: null
     };
   },
   onSelect(range, states) {
     // range is a moment-range object
     this.props.setValue(range);
+    setTimeout(function () {
+      this.props.hideCalendar();
+    }.bind(this), 500)
   },
 
   onToggleCalendar () {
-    this.setState({
-      showCalendar: !this.state.showCalendar
-    });
-
-    return false;
+    if (this.props.uiState.showCalendar) {
+      this.props.hideCalendar();
+    } else {
+      this.props.showCalendar();
+    }
   },
 
   render() {
@@ -50,18 +52,27 @@ const DatePicker = React.createClass({
     const start = this.props.value ? this.props.value.start.format('DD.MM.YYYY') : '';
     const end = this.props.value ? this.props.value.end.format('DD.MM.YYYY') : '';
 
+    console.log(this.props.uiState)
     return (
       <div>
         <div className="row">
           <form className="form-inline">
             <div className="form-group">
-              <input type="text" className="form-control" value={start} readOnly disabled/>
-              <input type="text" className="form-control" value={end} readOnly disabled />
+              <div className="input-group">
+                <input type="text" style={{width: '100px'}} className="form-control" value={start} placeholder="Start" readOnly disabled/>
+                <div className="input-group-addon">-</div>
+                <input type="text" style={{width: '100px'}} className="form-control" value={end} placeholder="End" readOnly disabled />
+              </div>
             </div>
             <div className="btn-group" role="group">
-              <a className="btn btn-primary" onClick={this.onToggleCalendar}>
-                <span className="glyphicon glyphicon-calendar" aria-hidden="true"></span>
-                <span> Toggle Calendar</span>
+              <a className="btn btn-default" onClick={this.onToggleCalendar}>
+              {
+                this.props.uiState.showCalendar ? (
+                  <span className="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                ) : (
+                  <span className="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                )
+              }
               </a>
               <a className="btn btn-default" onClick={this.props.deleteRange}>
                 <span className="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -69,7 +80,7 @@ const DatePicker = React.createClass({
             </div>
           </form>
         </div>
-        { this.state.showCalendar ? <DateRangePicker
+        { this.props.uiState.showCalendar ? <DateRangePicker
           singleDateRange={true}
           firstOfWeek={1}
           numberOfCalendars={3}

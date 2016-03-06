@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
 import { setValue, addRange, deleteRange } from '../../redux/modules/ranges';
+import { showCalendar, hideCalendar } from '../../redux/modules/uiState';
 import classes from './HomeView.scss';
 import Range from '../../components/range';
 import _ from 'lodash';
@@ -12,7 +13,10 @@ import moment from 'moment';
 class HomeView extends React.Component {
   static propTypes = {
     ranges: PropTypes.object.isRequired,
-    addRange: PropTypes.func.isRequired
+    addRange: PropTypes.func.isRequired,
+    deleteRange: PropTypes.func.isRequired,
+    hideCalendar: PropTypes.func.isRequired,
+    showCalendar: PropTypes.func.isRequired
   };
 
   range (range, id) {
@@ -21,6 +25,11 @@ class HomeView extends React.Component {
     const rangesWithoutThis = _.omitBy(this.props.ranges, (range, rangeId) => rangeId === id || range === null);
     const otherRanges = _.values(rangesWithoutThis);
 
+    const showCalendar = this.props.showCalendar.bind(null, id);
+    const hideCalendar = this.props.hideCalendar.bind(null, id);
+
+    const uiState = this.props.uiState.ranges[id];
+
     return (<Range
       key={id}
       rangeId={id}
@@ -28,6 +37,9 @@ class HomeView extends React.Component {
       otherRanges={otherRanges}
       setValue={setValue}
       deleteRange={deleteRange}
+      showCalendar={showCalendar}
+      hideCalendar={hideCalendar}
+      uiState={uiState}
     />);
   }
 
@@ -51,8 +63,11 @@ const mapStateToProps = (state) => {
   const ranges = state.get('ranges').toJS();
   const days = schengen(180, moment(), _.filter(_.values(ranges), _.isObject));
   console.log(days);
+
+  const uiState = state.get('uiState').toJS();
   return {
-    ranges
+    ranges,
+    uiState
   }
 };
 
@@ -60,7 +75,9 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     setValue,
     addRange,
-    deleteRange
+    deleteRange,
+    showCalendar,
+    hideCalendar
   }, dispatch)
 }
 
@@ -68,11 +85,14 @@ let idCounter = 0;
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, ownProps, {
     ranges: stateProps.ranges,
+    uiState: stateProps.uiState,
     addRange: () => {
       dispatchProps.addRange(`range-${idCounter++}`);
     },
     setValue: (id, newValue) => dispatchProps.setValue(id, newValue),
-    deleteRange: (id) => dispatchProps.deleteRange(id)
+    deleteRange: (id) => dispatchProps.deleteRange(id),
+    showCalendar: (id) => dispatchProps.showCalendar(id),
+    hideCalendar: (id) => dispatchProps.hideCalendar(id)
   })
 }
 
