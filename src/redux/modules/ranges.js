@@ -3,19 +3,29 @@ import Immutable from 'immutable';
 // ------------------------------------
 // Constants
 // ------------------------------------
-export const RANGE_SET = 'RANGE_SET';
+export const VALUE_SET = 'VALUE_SET';
 export const RANGE_DELETE = 'RANGE_DELETE';
+export const RANGE_ADD = 'RANGE_ADD';
 
 // ------------------------------------
 // Actions
 // ------------------------------------
 
-export function setRange (id, range) {
+export function setValue (id, value) {
   return {
-    type: RANGE_SET,
+    type: VALUE_SET,
     payload: {
       id,
-      range
+      value
+    }
+  };
+}
+
+export function addRange (id) {
+  return {
+    type: RANGE_ADD,
+    payload: {
+      id
     }
   };
 }
@@ -30,7 +40,8 @@ export function deleteRange (id) {
 }
 
 export const actions = {
-  setRange,
+  setValue,
+  addRange,
   deleteRange
 };
 
@@ -38,7 +49,12 @@ export const actions = {
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [RANGE_SET]: (state, action) => state.set(action.payload.id, action.payload.range),
+  [RANGE_ADD]: (state, action) => state.set(action.payload.id, null),
+  [VALUE_SET]: (state, action) => {
+    return state.set(action.payload.id, action.payload.value);
+    // const newRange = range.set('value', action.payload.value);
+    // return state.set(action.payload.id, newRange);
+  },
   [RANGE_DELETE]: (state, action) => state.delete(action.payload.id)
 };
 

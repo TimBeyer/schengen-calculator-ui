@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux-immutable';
-import dates from './modules/dates';
+import ranges from './modules/ranges';
 
 export default combineReducers({
-  dates
+  ranges
 });

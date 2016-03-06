@@ -1,69 +1,36 @@
 /* @flow */
 import React, { PropTypes } from 'react';
-import GregorianCalendarFormat from 'gregorian-calendar-format';
-import RangeCalendar from 'rc-calendar/lib/RangeCalendar';
-import Picker from 'rc-calendar/lib/Picker';
-import 'rc-calendar/assets/index.css';
+import 'react-daterange-picker/dist/css/react-calendar.css';
+import moment from 'moment-range';
+import DateRangePicker from 'react-daterange-picker';
 
-const formatter = new GregorianCalendarFormat('dd-MM-yyyy');
 
-function isValidRange(v) {
-  return v && v[0] && v[1];
-}
-
-function format(v) {
-  return v ? formatter.format(v) : '';
-}
-
-const Range = React.createClass({
+const DatePicker = React.createClass({
   getInitialState() {
     return {
-      disabled: false
+      value: null
     };
   },
-
-  onChange(value) {
-    this.props.setRange(value);
+  onSelect(range, states) {
+    // range is a moment-range object
+    this.props.setValue(range);
   },
 
   render() {
-    const state = this.state;
-    const calendar = (
-      <RangeCalendar
-        showWeekNumber={true}
-        showOk={true}
-      />
-    );
     return (
-
-      <Picker
-      value={this.props.value}
-      onChange={this.onChange}
-      animation="slide-up"
-      calendar={calendar}
-    >
-      {
-        ({ value }) => {
-          return (
-            <form className="form-inline">
-              <div className="form-group">
-                <div className="input-group">
-                  <input
-                    style={{ width: 200 }}
-                    disabled={state.disabled}
-                    className="form-control"
-                    value={`${format(value[0])} - ${format(value[1])}`}
-                  />
-                  <a className="btn btn-danger input-group-addon" onClick={this.props.deleteRange}>X</a>
-                </div>
-              </div>
-            </form>);
-        }
-      }
-    </Picker>
-
+      <div>
+        <button className="btn btn-danger" onClick={this.props.deleteRange}>Delete</button>
+        <DateRangePicker
+          singleDateRange={true}
+          firstOfWeek={1}
+          numberOfCalendars={3}
+          selectionType='range'
+          showLegend={false}
+          value={this.props.value || null}
+          onSelect={this.onSelect} />
+        </div>
     );
   },
 });
 
-export default Range;
+export default DatePicker;

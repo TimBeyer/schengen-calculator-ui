@@ -2,29 +2,29 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
-import { setRange, deleteRange } from '../../redux/modules/dates';
+import { setValue, addRange, deleteRange } from '../../redux/modules/ranges';
 import classes from './HomeView.scss';
 import Range from '../../components/range';
 import _ from 'lodash';
+import schengen from 'schengen-calculator';
+import moment from 'moment';
 
-// We avoid using the `@connect` decorator on the class definition so
-// that we can export the undecorated component for testing.
-// See: http://rackt.github.io/redux/docs/recipes/WritingTests.html
 class HomeView extends React.Component {
   static propTypes = {
-    dates: PropTypes.object.isRequired,
+    ranges: PropTypes.object.isRequired,
     addRange: PropTypes.func.isRequired
   };
 
   render () {
+    console.log(this.props.ranges)
     return (
       <div className='container text-center'>
         <h1>Calculate your schengen area stay</h1>
-        {_.map(this.props.dates, (range, id) => <Range
+        {_.map(this.props.ranges, (range, id) => <Range
           key={id}
           rangeId={id}
           value={range}
-          setRange={this.props.setRange.bind(null, id)}
+          setValue={this.props.setValue.bind(null, id)}
           deleteRange={this.props.deleteRange.bind(null, id)}
         />)}
         <h2>
@@ -38,14 +38,19 @@ class HomeView extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+  const ranges = state.get('ranges').toJS();
+  console.log(ranges);
+  const days = schengen(180, moment(), _.filter(_.values(ranges), _.isObject));
+  console.log(days);
   return {
-    dates: state.get('dates').toJS()
+    ranges
   }
 };
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    setRange,
+    setValue,
+    addRange,
     deleteRange
   }, dispatch)
 }
@@ -53,10 +58,13 @@ function mapDispatchToProps(dispatch) {
 let idCounter = 0;
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, ownProps, {
-    dates: stateProps.dates,
-    addRange: () => dispatchProps.setRange(`range-${idCounter++}`, []),
-    setRange: (id, newRange) => dispatchProps.setRange(id, newRange),
+    ranges: stateProps.ranges,
+    addRange: () => {
+      dispatchProps.addRange(`range-${idCounter++}`);
+    },
+    setValue: (id, newValue) => dispatchProps.setValue(id, newValue),
     deleteRange: (id) => dispatchProps.deleteRange(id)
   })
 }
+
 export default HomeView = connect(mapStateToProps, mapDispatchToProps, mergeProps)(HomeView);
