@@ -89,7 +89,7 @@ const DatePicker = React.createClass({
           </div>
         </div>
 
-        { this.props.uiState.showCalendar ? <DateRangePicker
+        { this.props.uiState.showCalendar ? <div className="center-block"><DateRangePicker
           singleDateRange={true}
           firstOfWeek={1}
           numberOfCalendars={3}
@@ -100,7 +100,7 @@ const DatePicker = React.createClass({
           stateDefinitions={stateDefinitions}
           dateStates={dateRanges}
           value={this.props.value || null}
-          onSelect={this.onSelect} /> : '' }
+          onSelect={this.onSelect} /></div> : '' }
 
       </div>
     );

@@ -6,6 +6,7 @@ import { setValue, addRange, deleteRange } from '../../redux/modules/ranges';
 import { showCalendar, hideCalendar } from '../../redux/modules/uiState';
 import classes from './HomeView.scss';
 import Range from '../../components/range';
+import Overview from '../../components/overview';
 import _ from 'lodash';
 import schengen from 'schengen-calculator';
 import moment from 'moment';
@@ -65,6 +66,23 @@ class HomeView extends React.Component {
               <div className="panel-body">
                 {_.map(this.props.ranges, this.range.bind(this))}
 
+              </div>
+            </div>
+          </div>
+          <div className="col-sm-12 col-md-7">
+            <div className="panel panel-default">
+              <div className="panel-heading">
+                <div className="row">
+                  <div className="col-xs-12 panel-title">
+                    Overview
+                  </div>
+                </div>
+              </div>
+              <div className="panel-body">
+              <Overview
+                otherRanges={this.props.ranges}
+                uiState={this.props.uiState}
+              />
               </div>
             </div>
           </div>
