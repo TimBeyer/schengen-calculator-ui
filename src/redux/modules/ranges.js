@@ -50,7 +50,6 @@ export const actions = {
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [RANGE_ADD]: (state, action) => state.set(action.payload.id, null),
   [VALUE_SET]: (state, action) => {
     return state.set(action.payload.id, action.payload.value.clone());
     // const newRange = range.set('value', action.payload.value);
@@ -69,8 +68,6 @@ const dates = function dateReducer (state = initialState, action) {
   return handler ? handler(state, action) : state;
 };
 
-const undoableDates = undoable(dates, {
-  filter: distinctState()
-});
 
-export default undoableDates;
+
+export default dates;

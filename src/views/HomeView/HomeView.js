@@ -16,7 +16,7 @@ import { ActionCreators as UndoActionCreators } from 'redux-undo'
 const Undo = ({ canUndo, onUndo }) => (
   (canUndo ? (
     <a className="btn btn-default btn-xs" onClick={onUndo} disabled={!canUndo}>
-      Undo
+      <span className="glyphicon glyphicon-repeat"></span>
     </a>
   ) : (
     <span style={{display: 'none'}}></span>
@@ -51,7 +51,6 @@ class HomeView extends React.Component {
     const showCalendar = this.props.showCalendar.bind(null, id);
     const hideCalendar = this.props.hideCalendar.bind(null, id);
 
-    const uiState = this.props.uiState.ranges[id];
 
     return (<Range
       key={"range-" + id}
@@ -62,25 +61,19 @@ class HomeView extends React.Component {
       deleteRange={deleteRange}
       showCalendar={showCalendar}
       hideCalendar={hideCalendar}
-      uiState={uiState}
     />);
   }
 
   entry (range, id) {
     const deleteRange = this.props.deleteRange.bind(null, id);
-    const showCalendar = this.props.editMode.bind(null, id);
-    const hideCalendar = this.props.overviewMode.bind(null, id);
-
-    const uiState = this.props.uiState.ranges[id];
+    const editMode = this.props.editMode.bind(null, id);
 
     return (<Entry
       key={"entry-" + id}
       rangeId={id}
       value={range}
       deleteRange={deleteRange}
-      showCalendar={showCalendar}
-      hideCalendar={hideCalendar}
-      uiState={uiState}
+      editMode={editMode}
     />);
   }
 
@@ -94,9 +87,7 @@ class HomeView extends React.Component {
               <Undo
               canUndo={this.props.canUndo}
               onUndo={this.props.undo} />
-              <Redo
-              canRedo={this.props.canRedo}
-              onRedo={this.props.redo} />
+
               <button className='btn btn-success btn-xs' onClick={this.props.overviewMode}>
                 <span className="glyphicon glyphicon-ok" aria-hidden="true"></span> Done
               </button>
@@ -120,9 +111,7 @@ class HomeView extends React.Component {
               <Undo
               canUndo={this.props.canUndo}
               onUndo={this.props.undo} />
-              <Redo
-              canRedo={this.props.canRedo}
-              onRedo={this.props.redo} />
+
               <button className='btn btn-success btn-xs' onClick={this.props.addRange}>
                 <span className="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Stay
               </button>
@@ -153,14 +142,14 @@ class HomeView extends React.Component {
           </div>
         </div>
         <div className="row">
-          <div className="col-sm-12 col-md-4">
+          <div className="col-sm-12 col-md-4 col-lg-3">
             { isEditMode ? (
               this.editPanel(this.props.ranges[editId], editId)
             ) : (
               this.overviewPanel()
             )}
           </div>
-          <div className="col-sm-12 col-md-8">
+          <div className="col-sm-12 col-md-8 col-lg-9">
             <div className="panel panel-default">
               <div className="panel-heading">
                 <div className="row">
@@ -186,10 +175,10 @@ class HomeView extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const ranges = state.get('ranges');
+  const ranges = state.present.get('ranges');
 
-  const uiState = state.get('uiState').toJS();
-  const days = schengen(180, uiState.referencePoint, _.filter(_.values(ranges.present.toJS()), _.isObject));
+  const uiState = state.present.get('uiState').toJS();
+  const days = schengen(180, uiState.referencePoint, _.filter(_.values(ranges.toJS()), _.isObject));
   const dayCount = days.reduce((sum, count) => sum + count, 0);
   const remainingDays = 90 - dayCount;
 
@@ -197,7 +186,9 @@ const mapStateToProps = (state) => {
     ranges,
     uiState,
     dayCount,
-    remainingDays
+    remainingDays,
+    canUndo: state.past.length > 0,
+    canRedo: state.future.length > 0,
   }
 };
 
@@ -219,11 +210,11 @@ function mapDispatchToProps(dispatch) {
 let idCounter = 0;
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, ownProps, {
-    canUndo: stateProps.ranges.past.length > 0,
-    canRedo: stateProps.ranges.future.length > 0,
+    canUndo: stateProps.canUndo,
+    canRedo: stateProps.canRedo,
     undo: dispatchProps.undo,
     redo: dispatchProps.redo,
-    ranges: stateProps.ranges.present.toJS(),
+    ranges: stateProps.ranges.toJS(),
     uiState: stateProps.uiState,
     dayCount: stateProps.dayCount,
     remainingDays: stateProps.remainingDays,

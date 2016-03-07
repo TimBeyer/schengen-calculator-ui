@@ -25,9 +25,6 @@ const DatePicker = React.createClass({
   onSelect(range, states) {
     // range is a moment-range object
     this.props.setValue(range);
-    setTimeout(function () {
-      this.props.hideCalendar();
-    }.bind(this), 500)
   },
 
   render() {
@@ -48,7 +45,7 @@ const DatePicker = React.createClass({
             <DateRangePicker
               singleDateRange={true}
               firstOfWeek={1}
-              numberOfCalendars={3}
+              numberOfCalendars={2}
               selectionType='range'
               selectedLabel='This stay'
               showLegend={true}
