@@ -10,6 +10,9 @@ export const RANGE_ADD = 'RANGE_ADD';
 export const CALENDAR_SHOW = 'CALENDAR_SHOW';
 export const CALENDAR_HIDE = 'CALENDAR_HIDE';
 
+export const MODE_EDIT = 'MODE_EDIT';
+export const MODE_OVERVIEW = 'MODE_OVERVIEW';
+
 export const REFERENCE_POINT_SET = 'REFERENCE_POINT_SET';
 
 // ------------------------------------
@@ -43,10 +46,28 @@ export function hideCalendar (id) {
   };
 }
 
+export function editMode (id) {
+  return {
+    type: MODE_EDIT,
+    payload: {
+      id
+    }
+  };
+}
+
+export function overviewMode (id) {
+  return {
+    type: MODE_OVERVIEW,
+    payload: {}
+  };
+}
+
 export const actions = {
   showCalendar,
   hideCalendar,
-  setReferencePoint
+  setReferencePoint,
+  editMode,
+  overviewMode
 };
 
 // ------------------------------------
@@ -65,14 +86,17 @@ const ACTION_HANDLERS = {
     return state.setIn(['ranges', action.payload.id, 'showCalendar'], false);
   },
   [RANGE_DELETE]: (state, action) => state.deleteIn(['ranges', action.payload.id]),
-  [REFERENCE_POINT_SET]: (state, action) => state.setIn(['referencePoint'], action.payload.value)
+  [REFERENCE_POINT_SET]: (state, action) => state.setIn(['referencePoint'], action.payload.value),
+  [MODE_EDIT]: (state, action) => state.setIn(['mode'], MODE_EDIT).setIn(['editId'], action.payload.id),
+  [MODE_OVERVIEW]: (state, action) => state.setIn(['mode'], MODE_OVERVIEW).deleteIn(['editId'])
 };
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
 const initialState = Immutable.Map({
-  referencePoint: moment()
+  referencePoint: moment(),
+  mode: MODE_OVERVIEW
 });
 export default function dateReducer (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];

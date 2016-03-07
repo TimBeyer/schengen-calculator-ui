@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+import undoable, { distinctState } from 'redux-undo'
 
 // ------------------------------------
 // Constants
@@ -62,8 +63,14 @@ const ACTION_HANDLERS = {
 // Reducer
 // ------------------------------------
 const initialState = Immutable.Map();
-export default function dateReducer (state = initialState, action) {
+const dates = function dateReducer (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
 
   return handler ? handler(state, action) : state;
-}
+};
+
+const undoableDates = undoable(dates, {
+  filter: distinctState()
+});
+
+export default undoableDates;

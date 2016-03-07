@@ -22,8 +22,6 @@ const Overview = React.createClass({
     };
   },
   onSelect(value, states) {
-    console.log('Selected', value);
-    console.log(this.props)
     this.props.setReferencePoint(value);
   },
 
@@ -47,7 +45,7 @@ const Overview = React.createClass({
               firstOfWeek={1}
               numberOfCalendars={6}
               selectionType='single'
-              selectedLabel='This stay'
+              selectedLabel='Reference Point'
               showLegend={true}
               fullDayStates={true}
               stateDefinitions={stateDefinitions}
