@@ -1,5 +1,4 @@
 import Immutable from 'immutable';
-import undoable, { distinctState } from 'redux-undo'
 
 // ------------------------------------
 // Constants
@@ -67,7 +66,5 @@ const dates = function dateReducer (state = initialState, action) {
 
   return handler ? handler(state, action) : state;
 };
-
-
 
 export default dates;

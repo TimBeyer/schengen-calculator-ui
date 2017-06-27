@@ -1,7 +1,6 @@
 /* @flow */
 import React, { PropTypes } from 'react';
 import 'react-daterange-picker/dist/css/react-calendar.css';
-import moment from 'moment-range';
 import DateRangePicker from 'react-daterange-picker';
 import _ from 'lodash';
 
@@ -11,21 +10,27 @@ const stateDefinitions = {
   },
   euDays: {
     color: '#cccccc',
-    label: 'Time spent in EU',
-  },
+    label: 'Time spent in EU'
+  }
 };
 
-const Overview = React.createClass({
-  getInitialState() {
-    return {
-      value: null
-    };
-  },
-  onSelect(value, states) {
-    this.props.setReferencePoint(value);
-  },
+class Overview extends React.Component {
 
-  render() {
+  static propTypes = {
+    otherRanges: PropTypes.object.isRequired,
+    setReferencePoint: PropTypes.func.isRequired,
+    value: PropTypes.object.isRequired
+  };
+
+  state = {
+    value: null
+  };
+
+  onSelect = (value, states) => {
+    this.props.setReferencePoint(value);
+  }
+
+  render = () => {
     const sortedRanges = _.sortBy(_.filter(this.props.otherRanges, _.isObject), (range) => {
       return range.start;
     });
@@ -38,16 +43,16 @@ const Overview = React.createClass({
 
     return (
       <div>
-        <div className="row">
-          <div className="col-xs-12">
+        <div className='row'>
+          <div className='col-xs-12'>
             <DateRangePicker
-              singleDateRange={true}
+              singleDateRange
               firstOfWeek={1}
               numberOfCalendars={6}
               selectionType='single'
               selectedLabel='Reference Point'
-              showLegend={true}
-              fullDayStates={true}
+              showLegend
+              fullDayStates
               stateDefinitions={stateDefinitions}
               dateStates={dateRanges}
               value={this.props.value || null}
@@ -56,7 +61,7 @@ const Overview = React.createClass({
         </div>
       </div>
     );
-  },
-});
+  }
+};
 
 export default Overview;

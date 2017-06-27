@@ -1,7 +1,6 @@
 /* @flow */
 import React, { PropTypes } from 'react';
 import 'react-daterange-picker/dist/css/react-calendar.css';
-import moment from 'moment-range';
 import DateRangePicker from 'react-daterange-picker';
 import _ from 'lodash';
 
@@ -12,22 +11,27 @@ const stateDefinitions = {
   unavailable: {
     selectable: false,
     color: '#cccccc',
-    label: 'Previous stays',
-  },
+    label: 'Previous stays'
+  }
 };
 
-const DatePicker = React.createClass({
-  getInitialState() {
-    return {
-      value: null
-    };
-  },
-  onSelect(range, states) {
+class DatePicker extends React.Component {
+  static propTypes = {
+    otherRanges: PropTypes.array.isRequired,
+    setValue: PropTypes.func.isRequired,
+    value: PropTypes.object
+  };
+
+  state = {
+    value: null
+  }
+
+  onSelect = (range, states) => {
     // range is a moment-range object
     this.props.setValue(range);
-  },
+  }
 
-  render() {
+  render = () => {
     const sortedRanges = _.sortBy(_.filter(this.props.otherRanges, _.isObject), (range) => {
       return range.start;
     });
@@ -39,17 +43,17 @@ const DatePicker = React.createClass({
     });
 
     return (
-      <div className="row">
-        <div className="col-xs-12">
-          <div className="center-block">
+      <div className='row'>
+        <div className='col-xs-12'>
+          <div className='center-block'>
             <DateRangePicker
-              singleDateRange={true}
+              singleDateRange
               firstOfWeek={1}
               numberOfCalendars={2}
               selectionType='range'
               selectedLabel='This stay'
-              showLegend={true}
-              fullDayStates={true}
+              showLegend
+              fullDayStates
               stateDefinitions={stateDefinitions}
               dateStates={dateRanges}
               value={this.props.value || null}
@@ -58,7 +62,7 @@ const DatePicker = React.createClass({
         </div>
       </div>
     );
-  },
-});
+  }
+};
 
 export default DatePicker;
